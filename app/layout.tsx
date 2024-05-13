@@ -5,6 +5,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
 import BootstrapClient from './components/BootstrapClient'
+import Navbar from './components/Navbar'
+import SessionWrapper from './components/SessionWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,22 +21,25 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <section>
-          <div className="d-flex justify-content-center">
-            <div>
-              <div className="p-4 rounded mt-4 underlined">
-                <h1>
-                  <u>Serverless Content Management System</u>
-                </h1>
+    <SessionWrapper>
+      <html lang="en">
+        <body className={inter.className}>
+          <section>
+            <div className="d-flex justify-content-center">
+              <div>
+                <div className="p-4 rounded mt-4 underlined">
+                  <h1>
+                    <u>Serverless Content Management System</u>
+                  </h1>
+                </div>
               </div>
             </div>
-          </div>
-          {children}
-        </section>
-      </body>
-      <BootstrapClient />
-    </html>
+            <Navbar />
+            {children}
+          </section>
+        </body>
+        <BootstrapClient />
+      </html>
+    </SessionWrapper>
   )
 }
