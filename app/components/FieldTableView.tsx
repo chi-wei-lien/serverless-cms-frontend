@@ -1,11 +1,15 @@
 'use client'
-import { UseFieldArrayRemove, UseFormRegister } from 'react-hook-form'
+import {
+  FieldArrayWithId,
+  UseFieldArrayRemove,
+  UseFormRegister,
+} from 'react-hook-form'
 
-import { Field, FormValues } from '../types/field'
+import { FormValues } from '../types/field'
 
 interface FieldTableViewParam {
   register: UseFormRegister<FormValues>
-  fields: Field[]
+  fields: FieldArrayWithId<FormValues, 'fields', 'id'>[]
   remove: UseFieldArrayRemove
 }
 
@@ -33,7 +37,7 @@ const FieldTableView = ({ register, fields, remove }: FieldTableViewParam) => {
         {fields.length == 0 && NoFieldMessage}
         {fields.map((field, index) => {
           return (
-            <tr key={index + 1}>
+            <tr key={field.id + 1}>
               <th scope="row">{index + 1}</th>
               <td>
                 <input
