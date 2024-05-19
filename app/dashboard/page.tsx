@@ -15,12 +15,24 @@ const NoGroupMessage = (
   </tr>
 )
 
+const LoadingMessage = (
+  <tr>
+    <td colSpan={4}>
+      <div className="w-1 d-flex justify-content-center">
+        <div className="spinner-border" role="status" />
+      </div>
+    </td>
+  </tr>
+)
+
 const DashboardPage = () => {
   const { data: session } = useSession()
   const [groups, setGroups] = useState<PostGroup[]>([])
+  const [ready, setReady] = useState(false)
 
   const fetchGroups = async () => {
     const groups = await getGroups(session)
+    setReady(true)
     setGroups(groups)
   }
 
@@ -48,7 +60,8 @@ const DashboardPage = () => {
               </tr>
             </thead>
             <tbody>
-              {groups.length == 0 && NoGroupMessage}
+              {!ready && LoadingMessage}
+              {ready && groups.length == 0 && NoGroupMessage}
               {groups.map((group, index) => {
                 return (
                   <tr key={index + 1}>

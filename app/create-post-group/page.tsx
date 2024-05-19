@@ -12,7 +12,6 @@ import { FormValues } from '../types/field'
 
 const CreatePostGroup = () => {
   const { data: session } = useSession()
-
   const [view, setView] = useState('tableView')
   const router = useRouter()
 
@@ -107,6 +106,7 @@ const CreatePostGroup = () => {
           <div className="" style={{ width: '800px' }}>
             {view == 'tableView' && (
               <FieldTableView
+                ready={true}
                 fields={fields}
                 register={register}
                 remove={remove}

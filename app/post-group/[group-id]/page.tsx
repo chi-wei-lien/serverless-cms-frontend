@@ -14,6 +14,16 @@ const NoPostMessage = (
   </tr>
 )
 
+const LoadingMessage = (
+  <tr>
+    <td colSpan={4}>
+      <div className="w-1 d-flex justify-content-center">
+        <div className="spinner-border" role="status" />
+      </div>
+    </td>
+  </tr>
+)
+
 interface PostGroupProps {
   params: { 'group-id': string }
 }
@@ -21,10 +31,12 @@ interface PostGroupProps {
 const PostGroup = ({ params }: PostGroupProps) => {
   const { data: session } = useSession()
   const [posts, setPosts] = useState<Post[]>([])
+  const [ready, setReady] = useState(false)
 
   const fetchPosts = async () => {
     const posts = await getPosts(params['group-id'], session)
     setPosts(posts)
+    setReady(true)
   }
 
   useEffect(() => {
@@ -54,7 +66,8 @@ const PostGroup = ({ params }: PostGroupProps) => {
               </tr>
             </thead>
             <tbody>
-              {posts.length == 0 && NoPostMessage}
+              {!ready && LoadingMessage}
+              {ready && posts.length == 0 && NoPostMessage}
               {posts.map((post, index) => {
                 return (
                   <tr key={index + 1}>

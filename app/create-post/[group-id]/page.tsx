@@ -21,6 +21,7 @@ const CreatePost = ({ params }: CreatePostProps) => {
 
   const [view, setView] = useState('tableView')
   const [group, setGroup] = useState<PostGroup>()
+  const [ready, setReady] = useState(false)
   const router = useRouter()
 
   const {
@@ -56,6 +57,7 @@ const CreatePost = ({ params }: CreatePostProps) => {
     setGroup(group)
     const fields = JSON.parse(group.fields) as FieldWithContent[]
     setValue('fields', fields)
+    setReady(true)
   }
 
   useEffect(() => {
@@ -102,7 +104,11 @@ const CreatePost = ({ params }: CreatePostProps) => {
           </ul>
           <div className="" style={{ width: '800px' }}>
             {view == 'tableView' && (
-              <PostTableView fields={fields} register={register} />
+              <PostTableView
+                ready={ready}
+                fields={fields}
+                register={register}
+              />
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">

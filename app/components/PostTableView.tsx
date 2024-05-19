@@ -6,7 +6,18 @@ import { PostFormValues } from '../types/field'
 interface FieldTableViewParam {
   fields: FieldArrayWithId<PostFormValues, 'fields', 'id'>[]
   register: UseFormRegister<PostFormValues>
+  ready: Boolean
 }
+
+const LoadingMessage = (
+  <tr>
+    <td colSpan={4}>
+      <div className="w-1 d-flex justify-content-center">
+        <div className="spinner-border" role="status" />
+      </div>
+    </td>
+  </tr>
+)
 
 const NoFieldMessage = (
   <tr>
@@ -17,7 +28,7 @@ const NoFieldMessage = (
   </tr>
 )
 
-const PostTableView = ({ register, fields }: FieldTableViewParam) => {
+const PostTableView = ({ register, fields, ready }: FieldTableViewParam) => {
   return (
     <table className="table">
       <thead className="table-dark">
@@ -29,7 +40,8 @@ const PostTableView = ({ register, fields }: FieldTableViewParam) => {
         </tr>
       </thead>
       <tbody>
-        {fields.length == 0 && NoFieldMessage}
+        {!ready && LoadingMessage}
+        {ready && fields.length == 0 && NoFieldMessage}
         {fields.map((field, index) => {
           return (
             <tr key={field.id + 1}>

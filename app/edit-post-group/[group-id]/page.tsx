@@ -42,6 +42,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
   })
 
   const [group, setGroup] = useState<PostGroup>()
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     fetchGroup()
@@ -53,6 +54,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
     const fields = JSON.parse(group.fields)
     setValue('groupName', group.groupName)
     setValue('fields', fields)
+    setReady(true)
   }
 
   const onSubmit = async (formData: FormValues) => {
@@ -129,6 +131,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
           <div className="" style={{ width: '800px' }}>
             {view == 'tableView' && (
               <FieldTableView
+                ready={ready}
                 fields={fields}
                 register={register}
                 remove={remove}

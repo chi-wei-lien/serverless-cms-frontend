@@ -25,6 +25,7 @@ const EditPost = ({ params }: CreatePostProps) => {
   const router = useRouter()
   const groupId = decodeUrlString(params['id'][0])
   const postId = decodeUrlString(params['id'][1])
+  const [ready, setReady] = useState(false)
 
   const {
     register,
@@ -53,6 +54,7 @@ const EditPost = ({ params }: CreatePostProps) => {
     const post = await getPost(groupId, postId, session)
     setValue('fields', post.fieldWithContent)
     setPost(post)
+    setReady(true)
   }
 
   useEffect(() => {
@@ -70,7 +72,10 @@ const EditPost = ({ params }: CreatePostProps) => {
           <ul className="nav nav-tabs mt-3">
             <li className="nav-item">
               <button
-                className={'nav-link ' + (view == 'tableView' ? 'active' : '')}
+                className={
+                  'nav-link ' +
+                  (view == 'tableView' ? 'active text-black' : 'text-secondary')
+                }
                 onClick={(e) => {
                   e.preventDefault()
                   setView('tableView')
@@ -81,7 +86,10 @@ const EditPost = ({ params }: CreatePostProps) => {
             </li>
             <li className="nav-item">
               <button
-                className={'nav-link ' + (view == 'jsonView' ? 'active' : '')}
+                className={
+                  'nav-link ' +
+                  (view == 'jsonView' ? 'active text-black' : 'text-secondary')
+                }
                 onClick={(e) => {
                   e.preventDefault()
                   setView('jsonView')
@@ -93,7 +101,11 @@ const EditPost = ({ params }: CreatePostProps) => {
           </ul>
           <div className="" style={{ width: '800px' }}>
             {view == 'tableView' && (
-              <PostTableView fields={fields} register={register} />
+              <PostTableView
+                ready={ready}
+                fields={fields}
+                register={register}
+              />
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">

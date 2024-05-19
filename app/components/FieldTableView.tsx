@@ -11,7 +11,18 @@ interface FieldTableViewParam {
   register: UseFormRegister<FormValues>
   fields: FieldArrayWithId<FormValues, 'fields', 'id'>[]
   remove: UseFieldArrayRemove
+  ready: Boolean
 }
+
+const LoadingMessage = (
+  <tr>
+    <td colSpan={4}>
+      <div className="w-1 d-flex justify-content-center">
+        <div className="spinner-border" role="status" />
+      </div>
+    </td>
+  </tr>
+)
 
 const NoFieldMessage = (
   <tr>
@@ -22,7 +33,12 @@ const NoFieldMessage = (
   </tr>
 )
 
-const FieldTableView = ({ register, fields, remove }: FieldTableViewParam) => {
+const FieldTableView = ({
+  register,
+  fields,
+  remove,
+  ready,
+}: FieldTableViewParam) => {
   return (
     <table className="table">
       <thead className="table-dark">
@@ -34,7 +50,8 @@ const FieldTableView = ({ register, fields, remove }: FieldTableViewParam) => {
         </tr>
       </thead>
       <tbody>
-        {fields.length == 0 && NoFieldMessage}
+        {!ready && LoadingMessage}
+        {ready && fields.length == 0 && NoFieldMessage}
         {fields.map((field, index) => {
           return (
             <tr key={field.id + 1}>
