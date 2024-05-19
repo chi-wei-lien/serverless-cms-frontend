@@ -1,5 +1,4 @@
 'use client'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
@@ -20,6 +19,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
   const { data: session } = useSession()
 
   const [view, setView] = useState('tableView')
+  const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
 
   const {
@@ -58,6 +58,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
   }
 
   const onSubmit = async (formData: FormValues) => {
+    setSubmitting(true)
     const groupId = decodeURIComponent(
       (params['group-id'] + '').replace(/\+/g, '%20')
     )
@@ -139,13 +140,20 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">
-              <Link href="/dashboard" className="btn btn-light">
+              <button
+                onClick={() => {
+                  router.push('/dashboard')
+                }}
+                className="btn btn-light"
+                disabled={submitting}
+              >
                 cancel
-              </Link>
+              </button>
               <input
                 type="submit"
                 className="btn btn-dark ms-2"
-                value="update"
+                disabled={submitting}
+                value={submitting ? 'updating' : 'update'}
               />
             </div>
           </div>

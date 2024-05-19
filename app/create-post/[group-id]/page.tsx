@@ -1,5 +1,4 @@
 'use client'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
@@ -22,6 +21,7 @@ const CreatePost = ({ params }: CreatePostProps) => {
   const [view, setView] = useState('tableView')
   const [group, setGroup] = useState<PostGroup>()
   const [ready, setReady] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
 
   const {
@@ -43,6 +43,7 @@ const CreatePost = ({ params }: CreatePostProps) => {
   })
 
   const onSubmit = async (formData: PostFormValues) => {
+    setSubmitting(true)
     const isoDateString = new Date().toISOString()
     const groupId = decodeURIComponent(
       (params['group-id'] + '').replace(/\+/g, '%20')
@@ -112,10 +113,21 @@ const CreatePost = ({ params }: CreatePostProps) => {
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">
-              <Link href="/dashboard" className="btn btn-light">
+              <button
+                onClick={() => {
+                  router.push('/dashboard')
+                }}
+                className="btn btn-light"
+                disabled={submitting}
+              >
                 cancel
-              </Link>
-              <input type="submit" className="btn btn-dark ms-2" value="save" />
+              </button>
+              <input
+                type="submit"
+                className="btn btn-dark ms-2"
+                disabled={submitting}
+                value={submitting ? 'saving' : 'save'}
+              />
             </div>
           </div>
         </form>

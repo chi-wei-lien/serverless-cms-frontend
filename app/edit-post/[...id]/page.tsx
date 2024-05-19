@@ -1,5 +1,4 @@
 'use client'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
@@ -26,6 +25,8 @@ const EditPost = ({ params }: CreatePostProps) => {
   const groupId = decodeUrlString(params['id'][0])
   const postId = decodeUrlString(params['id'][1])
   const [ready, setReady] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const callbackUrl = `/post-group/${groupId}`
 
   const {
     register,
@@ -46,7 +47,7 @@ const EditPost = ({ params }: CreatePostProps) => {
   })
 
   const onSubmit = async (formData: PostFormValues) => {
-    const callbackUrl = `/post-group/${groupId}`
+    setSubmitting(true)
     editPost(groupId, postId, formData, router, callbackUrl, session, true)
   }
 
@@ -109,10 +110,21 @@ const EditPost = ({ params }: CreatePostProps) => {
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">
-              <Link href="/dashboard" className="btn btn-light">
+              <button
+                onClick={() => {
+                  router.push(callbackUrl)
+                }}
+                className="btn btn-light"
+                disabled={submitting}
+              >
                 cancel
-              </Link>
-              <input type="submit" className="btn btn-dark ms-2" value="save" />
+              </button>
+              <input
+                type="submit"
+                className="btn btn-dark ms-2"
+                disabled={submitting}
+                value={submitting ? 'updating' : 'update'}
+              />
             </div>
           </div>
         </form>
