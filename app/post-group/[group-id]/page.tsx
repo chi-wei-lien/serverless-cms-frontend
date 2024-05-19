@@ -1,74 +1,73 @@
 'use client'
-import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
-import getGroups from '../lib/getGroups'
-import { PostGroup } from '../types/field'
+import getPosts from '@/app/lib/getPosts'
+import { Post } from '@/app/types/field'
 
-const NoGroupMessage = (
+const NoPostMessage = (
   <tr>
     <td colSpan={4}>
-      There are currently no groups yet! Create one by using the &quot;Create
-      Post Group&quot; button above.
+      There are currently no posts yet! Create one by using the &quot;Create
+      Post&quot; button above.
     </td>
   </tr>
 )
 
-const DashboardPage = () => {
-  const { data: session } = useSession()
-  const [groups, setGroups] = useState<PostGroup[]>([])
+interface PostGroupProps {
+  params: { 'group-id': string }
+}
 
-  const fetchGroups = async () => {
-    const groups = await getGroups(session)
-    setGroups(groups)
+const PostGroup = ({ params }: PostGroupProps) => {
+  const { data: session } = useSession()
+  const [posts, setPosts] = useState<Post[]>([])
+
+  const fetchPosts = async () => {
+    const posts = await getPosts(params['group-id'], session)
+    setPosts(posts)
   }
 
   useEffect(() => {
-    fetchGroups()
+    fetchPosts()
   }, [])
 
   return (
     <div className="d-flex justify-content-center mt-4">
       <div className="shadow p-3 mb-5 rounded">
-        <h3>Post Groups</h3>
+        <h3>Posts</h3>
         <div className="d-flex justify-content-end">
-          <Link href="/create-post-group" className="btn btn-primary mt-2">
-            Create Post Group
-          </Link>
+          <a
+            href={`/create-post/${params['group-id']}`}
+            className="btn btn-primary mt-2"
+          >
+            Create Post
+          </a>
         </div>
         <div className="mt-3" style={{ width: '800px' }}>
           <table className="table">
             <thead className="table-dark">
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">Group Name</th>
+                <th scope="col">Post Id</th>
                 <th scope="col">Last Modified</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
-              {groups.length == 0 && NoGroupMessage}
-              {groups.map((group, index) => {
+              {posts.length == 0 && NoPostMessage}
+              {posts.map((post, index) => {
                 return (
                   <tr key={index + 1}>
                     <th scope="row">{index + 1}</th>
-                    <td>{group.groupName}</td>
-                    <td>{group.createdOn.substring(0, 10)}</td>
+                    <td>{post.postId}</td>
+                    <td>{post.createdOn.substring(0, 10)}</td>
                     <td>
                       <a
-                        href={group.editUrl}
+                        href={post.editUrl}
                         className="btn btn-primary"
                         type="button"
                       >
                         edit
-                      </a>
-                      <a
-                        href={group.postUrl}
-                        className="btn btn-warning ms-2"
-                        type="button"
-                      >
-                        posts
                       </a>
                     </td>
                   </tr>
@@ -82,4 +81,4 @@ const DashboardPage = () => {
   )
 }
 
-export default DashboardPage
+export default PostGroup

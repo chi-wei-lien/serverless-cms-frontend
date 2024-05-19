@@ -5,21 +5,22 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 
-import editGroup from '@/app/lib/editGroup'
+import PostTableView from '@/app/components/PostTableView'
+import editPost from '@/app/lib/editPost'
 import getGroup from '@/app/lib/getGroup'
 
 import FieldJsonView from '../../components/FieldJsonView'
-import FieldTableView from '../../components/FieldTableView'
-import { FormValues, PostGroup } from '../../types/field'
+import { FieldWithContent, PostFormValues, PostGroup } from '../../types/field'
 
-interface EditPostGroupProps {
+interface CreatePostProps {
   params: { 'group-id': string }
 }
 
-const EditPostGroup = ({ params }: EditPostGroupProps) => {
+const CreatePost = ({ params }: CreatePostProps) => {
   const { data: session } = useSession()
 
   const [view, setView] = useState('tableView')
+  const [group, setGroup] = useState<PostGroup>()
   const router = useRouter()
 
   const {
@@ -29,62 +30,46 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<PostFormValues>({
     defaultValues: {
-      groupName: '',
       fields: [],
     },
     mode: 'onBlur',
   })
-  const { fields, append, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     name: 'fields',
     control,
   })
 
-  const [group, setGroup] = useState<PostGroup>()
+  const onSubmit = async (formData: PostFormValues) => {
+    const isoDateString = new Date().toISOString()
+    const groupId = decodeURIComponent(
+      (params['group-id'] + '').replace(/\+/g, '%20')
+    )
+    const postId = `post-${isoDateString}`
+    const callbackUrl = `/post-group/${groupId}`
+    editPost(groupId, postId, formData, router, callbackUrl, session, false)
+  }
+
+  const fetchGroup = async () => {
+    const group = await getGroup(params['group-id'], session)
+    setGroup(group)
+    const fields = JSON.parse(group.fields) as FieldWithContent[]
+    setValue('fields', fields)
+  }
 
   useEffect(() => {
     fetchGroup()
   }, [])
 
-  const fetchGroup = async () => {
-    const group = await getGroup(params['group-id'], session)
-    setGroup(group)
-    const fields = JSON.parse(group.fields)
-    setValue('groupName', group.groupName)
-    setValue('fields', fields)
-  }
-
-  const onSubmit = async (formData: FormValues) => {
-    const groupId = decodeURIComponent(
-      (params['group-id'] + '').replace(/\+/g, '%20')
-    )
-    editGroup(groupId, formData, router, session, true)
-  }
-
   const watchField = watch('fields')
-
-  function createField() {
-    append({
-      name: '',
-      dataType: 'string',
-    })
-  }
 
   return (
     <div className="d-flex justify-content-center mt-4">
       <div className="shadow p-3 mb-5 rounded">
-        <h3>Edit Post Group</h3>
+        <h3>Create Post</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <label className="mt-2">Post Group Name</label>
-          <input
-            className="mt-3 form-control"
-            placeholder="My New Post Group"
-            {...register(`groupName` as const, {
-              required: true,
-            })}
-          />
-          <label className="mt-3">Post Group Schema</label>
+          <label className="mt-3">Post Content</label>
           <ul className="nav nav-tabs mt-3">
             <li className="nav-item">
               <button
@@ -108,25 +93,10 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
                 JSON View
               </button>
             </li>
-            <li className="nav-item ms-auto">
-              <button
-                className="btn btn-primary"
-                onClick={(e) => {
-                  e.preventDefault()
-                  createField()
-                }}
-              >
-                Create Field
-              </button>
-            </li>
           </ul>
           <div className="" style={{ width: '800px' }}>
             {view == 'tableView' && (
-              <FieldTableView
-                fields={fields}
-                register={register}
-                remove={remove}
-              />
+              <PostTableView fields={fields} register={register} />
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">
@@ -136,7 +106,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
               <input
                 type="submit"
                 className="btn btn-primary ms-2"
-                value="update"
+                value="save"
               />
             </div>
           </div>
@@ -146,4 +116,4 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
   )
 }
 
-export default EditPostGroup
+export default CreatePost

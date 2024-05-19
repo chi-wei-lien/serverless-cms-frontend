@@ -15,10 +15,6 @@ interface SessionnCallbackParam {
 
 const authOptions = {
   providers: [
-    // GithubProvider({
-    //     clientId: process.env.GITHUB_ID as string,
-    //     clientSecret: process.env.GITHUB_SECRET as string,
-    // }),
     CognitoProvider({
       clientId: process.env.COGNITO_CLIENT_ID as string,
       clientSecret: process.env.COGNITO_CLIENT_SECRET as string,

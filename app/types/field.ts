@@ -3,9 +3,19 @@ export interface Field {
   dataType: string
 }
 
+export interface FieldWithContent {
+  name: string
+  dataType: string
+  content: string
+}
+
 export type FormValues = {
   groupName: string
   fields: Field[]
+}
+
+export type PostFormValues = {
+  fields: FieldWithContent[]
 }
 
 export type PostGroupResponse = {
@@ -25,5 +35,13 @@ export type PostGroup = {
   createdOn: string
   fields: string
   groupId: string
+  editUrl: string
+  postUrl: string
+}
+
+export type Post = {
+  postId: string
+  createdOn: string
+  fieldWithContent: FieldWithContent[]
   editUrl: string
 }
