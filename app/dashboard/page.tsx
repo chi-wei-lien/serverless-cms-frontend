@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
+import SyntaxHighlighter from 'react-syntax-highlighter'
 
 import getGroups from '../lib/getGroups'
 import { PostGroup } from '../types/field'
@@ -29,21 +30,37 @@ const DashboardPage = () => {
   const { data: session } = useSession()
   const [groups, setGroups] = useState<PostGroup[]>([])
   const [ready, setReady] = useState(false)
+  const [sampleRequest, setSampleRequest] = useState('')
+  const [sampleResponse, setSampleResponse] = useState('')
 
-  const fetchGroups = async () => {
+  const prepareDoc = async () => {
+    const response = await fetch('/api/get-groups', {
+      method: 'GET',
+    })
+    setSampleRequest(
+      "const response = await fetch('/api/get-groups', {\n" +
+        "\tmethod: 'GET'\n" +
+        '})\n' +
+        'const data = await response.json()\n'
+    )
+    setSampleResponse(JSON.stringify(await response.json(), null, '\t'))
+  }
+
+  const setup = async () => {
     const groups = await getGroups(session)
-    setReady(true)
     setGroups(groups)
+    prepareDoc()
+    setReady(true)
   }
 
   useEffect(() => {
-    fetchGroups()
+    setup()
   }, [])
 
   return (
     <div className="d-flex justify-content-center mt-4">
       <div className="shadow p-3 mb-5 rounded">
-        <h3>Post Groups</h3>
+        <h3 className="text-center">Post Groups</h3>
         <div className="d-flex justify-content-end">
           <Link href="/create-post-group" className="btn btn-dark mt-2">
             Create Post Group
@@ -90,6 +107,13 @@ const DashboardPage = () => {
             </tbody>
           </table>
         </div>
+        <h3 className="text-center mt-5">Documentation</h3>
+        <div>Sample Request (Node.js)</div>
+        <SyntaxHighlighter language="javascript">
+          {sampleRequest}
+        </SyntaxHighlighter>
+        Sample Response (json)
+        <SyntaxHighlighter language="json">{sampleResponse}</SyntaxHighlighter>
       </div>
     </div>
   )

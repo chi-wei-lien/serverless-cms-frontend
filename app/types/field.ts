@@ -39,6 +39,11 @@ export type PostGroup = {
   postUrl: string
 }
 
+export type ExternalPostGroup = {
+  groupName: string
+  createdOn: string
+}
+
 export type Post = {
   postId: string
   createdOn: string

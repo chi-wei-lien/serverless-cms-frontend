@@ -10,13 +10,15 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@types/react-syntax-highlighter": "^15.5.13",
     "bootstrap": "^5.3.3",
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "next": "^14.0.4",
     "next-auth": "^4.24.5",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.51.4"
+    "react-hook-form": "^7.51.4",
+    "react-syntax-highlighter": "^15.5.0"
   },
   "devDependencies": {
     "@types/node": "^20",
