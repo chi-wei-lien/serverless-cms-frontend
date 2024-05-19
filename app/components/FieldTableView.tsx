@@ -61,7 +61,7 @@ const FieldTableView = ({ register, fields, remove }: FieldTableViewParam) => {
               </td>
               <td>
                 <button
-                  className="btn btn-danger"
+                  className="btn btn-secondary"
                   type="button"
                   onClick={() => remove(index)}
                 >

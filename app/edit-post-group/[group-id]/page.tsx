@@ -88,7 +88,10 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
           <ul className="nav nav-tabs mt-3">
             <li className="nav-item">
               <button
-                className={'nav-link ' + (view == 'tableView' ? 'active' : '')}
+                className={
+                  'nav-link ' +
+                  (view == 'jsonView' ? 'active text-secondary' : 'text-black')
+                }
                 onClick={(e) => {
                   e.preventDefault()
                   setView('tableView')
@@ -99,7 +102,10 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
             </li>
             <li className="nav-item">
               <button
-                className={'nav-link ' + (view == 'jsonView' ? 'active' : '')}
+                className={
+                  'nav-link ' +
+                  (view == 'jsonView' ? 'active text-black' : 'text-secondary')
+                }
                 onClick={(e) => {
                   e.preventDefault()
                   setView('jsonView')
@@ -110,7 +116,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
             </li>
             <li className="nav-item ms-auto">
               <button
-                className="btn btn-primary"
+                className="btn btn-dark"
                 onClick={(e) => {
                   e.preventDefault()
                   createField()
@@ -130,12 +136,12 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">
-              <Link href="/dashboard" className="btn btn-secondary">
+              <Link href="/dashboard" className="btn btn-light">
                 cancel
               </Link>
               <input
                 type="submit"
-                className="btn btn-primary ms-2"
+                className="btn btn-dark ms-2"
                 value="update"
               />
             </div>

@@ -73,7 +73,10 @@ const CreatePost = ({ params }: CreatePostProps) => {
           <ul className="nav nav-tabs mt-3">
             <li className="nav-item">
               <button
-                className={'nav-link ' + (view == 'tableView' ? 'active' : '')}
+                className={
+                  'nav-link ' +
+                  (view == 'jsonView' ? 'text-secondary' : 'active text-black')
+                }
                 onClick={(e) => {
                   e.preventDefault()
                   setView('tableView')
@@ -84,7 +87,10 @@ const CreatePost = ({ params }: CreatePostProps) => {
             </li>
             <li className="nav-item">
               <button
-                className={'nav-link ' + (view == 'jsonView' ? 'active' : '')}
+                className={
+                  'nav-link ' +
+                  (view == 'jsonView' ? 'active text-black' : 'text-secondary')
+                }
                 onClick={(e) => {
                   e.preventDefault()
                   setView('jsonView')
@@ -100,14 +106,10 @@ const CreatePost = ({ params }: CreatePostProps) => {
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">
-              <Link href="/dashboard" className="btn btn-secondary">
+              <Link href="/dashboard" className="btn btn-light">
                 cancel
               </Link>
-              <input
-                type="submit"
-                className="btn btn-primary ms-2"
-                value="save"
-              />
+              <input type="submit" className="btn btn-dark ms-2" value="save" />
             </div>
           </div>
         </form>

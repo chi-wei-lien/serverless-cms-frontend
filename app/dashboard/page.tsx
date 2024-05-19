@@ -33,7 +33,7 @@ const DashboardPage = () => {
       <div className="shadow p-3 mb-5 rounded">
         <h3>Post Groups</h3>
         <div className="d-flex justify-content-end">
-          <Link href="/create-post-group" className="btn btn-primary mt-2">
+          <Link href="/create-post-group" className="btn btn-dark mt-2">
             Create Post Group
           </Link>
         </div>
@@ -58,14 +58,14 @@ const DashboardPage = () => {
                     <td>
                       <a
                         href={group.editUrl}
-                        className="btn btn-primary"
+                        className="btn btn-light"
                         type="button"
                       >
                         edit
                       </a>
                       <a
                         href={group.postUrl}
-                        className="btn btn-warning ms-2"
+                        className="btn btn-dark ms-2"
                         type="button"
                       >
                         posts

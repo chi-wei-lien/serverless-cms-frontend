@@ -38,7 +38,7 @@ const PostGroup = ({ params }: PostGroupProps) => {
         <div className="d-flex justify-content-end">
           <a
             href={`/create-post/${params['group-id']}`}
-            className="btn btn-primary mt-2"
+            className="btn btn-dark mt-2"
           >
             Create Post
           </a>
@@ -64,7 +64,7 @@ const PostGroup = ({ params }: PostGroupProps) => {
                     <td>
                       <a
                         href={post.editUrl}
-                        className="btn btn-primary"
+                        className="btn btn-dark"
                         type="button"
                       >
                         edit

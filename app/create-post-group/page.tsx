@@ -66,7 +66,10 @@ const CreatePostGroup = () => {
           <ul className="nav nav-tabs mt-3">
             <li className="nav-item">
               <button
-                className={'nav-link ' + (view == 'tableView' ? 'active' : '')}
+                className={
+                  'nav-link ' +
+                  (view == 'jsonView' ? 'text-secondary' : 'active text-dark')
+                }
                 onClick={(e) => {
                   e.preventDefault()
                   setView('tableView')
@@ -77,7 +80,10 @@ const CreatePostGroup = () => {
             </li>
             <li className="nav-item">
               <button
-                className={'nav-link ' + (view == 'jsonView' ? 'active' : '')}
+                className={
+                  'nav-link ' +
+                  (view == 'jsonView' ? 'active text-dark' : 'text-secondary')
+                }
                 onClick={(e) => {
                   e.preventDefault()
                   setView('jsonView')
@@ -88,7 +94,7 @@ const CreatePostGroup = () => {
             </li>
             <li className="nav-item ms-auto">
               <button
-                className="btn btn-primary"
+                className="btn btn-dark"
                 onClick={(e) => {
                   e.preventDefault()
                   createField()
@@ -108,14 +114,10 @@ const CreatePostGroup = () => {
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">
-              <Link href="/dashboard" className="btn btn-secondary">
+              <Link href="/dashboard" className="btn btn-light">
                 cancel
               </Link>
-              <input
-                type="submit"
-                className="btn btn-primary ms-2"
-                value="save"
-              />
+              <input type="submit" className="btn btn-dark ms-2" value="save" />
             </div>
           </div>
         </form>

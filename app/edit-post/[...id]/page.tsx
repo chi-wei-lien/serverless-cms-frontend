@@ -97,14 +97,10 @@ const EditPost = ({ params }: CreatePostProps) => {
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">
-              <Link href="/dashboard" className="btn btn-secondary">
+              <Link href="/dashboard" className="btn btn-light">
                 cancel
               </Link>
-              <input
-                type="submit"
-                className="btn btn-primary ms-2"
-                value="save"
-              />
+              <input type="submit" className="btn btn-dark ms-2" value="save" />
             </div>
           </div>
         </form>
