@@ -40,7 +40,14 @@ export type PostGroup = {
 }
 
 export type ExternalPostGroup = {
+  groupId: string
   groupName: string
+  createdOn: string
+}
+
+export type ExternalPost = {
+  groupId: string
+  postId: string
   createdOn: string
 }
 
@@ -49,4 +56,10 @@ export type Post = {
   createdOn: string
   fieldWithContent: FieldWithContent[]
   editUrl: string
+}
+
+export type ExternalPostInGroup = {
+  postId: string
+  createdOn: string
+  data: FieldWithContent[]
 }

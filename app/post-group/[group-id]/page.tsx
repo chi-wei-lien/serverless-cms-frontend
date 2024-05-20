@@ -2,6 +2,8 @@
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
+import Documentation from '@/app/components/Documentation'
+import decodeUrlString from '@/app/lib/decodeUrlString'
 import getPosts from '@/app/lib/getPosts'
 import { Post } from '@/app/types/field'
 
@@ -32,21 +34,43 @@ const PostGroup = ({ params }: PostGroupProps) => {
   const { data: session } = useSession()
   const [posts, setPosts] = useState<Post[]>([])
   const [ready, setReady] = useState(false)
+  const [sampleRequest, setSampleRequest] = useState('')
+  const [sampleResponse, setSampleResponse] = useState('')
+  const groupId = decodeUrlString(params['group-id'])
+  console.log(groupId)
 
-  const fetchPosts = async () => {
+  const prepareDoc = async () => {
+    const paramsObj = { 'group-id': groupId }
+    const searchParams = new URLSearchParams(paramsObj)
+
+    const apiUrl = window.location.hostname + '/api/get-posts?' + searchParams
+    const response = await fetch('/api/get-posts?' + searchParams, {
+      method: 'GET',
+    })
+    setSampleRequest(
+      `const response = await fetch('${apiUrl}', {
+  method: 'GET'
+})
+const data = await response.json()`
+    )
+    setSampleResponse(JSON.stringify(await response.json(), null, '\t'))
+  }
+
+  const setup = async () => {
     const posts = await getPosts(params['group-id'], session)
     setPosts(posts)
+    prepareDoc()
     setReady(true)
   }
 
   useEffect(() => {
-    fetchPosts()
+    setup()
   }, [])
 
   return (
     <div className="d-flex justify-content-center mt-4">
       <div className="shadow p-3 mb-5 rounded">
-        <h3>Posts</h3>
+        <h3 className="text-center">Posts</h3>
         <div className="d-flex justify-content-end">
           <a
             href={`/create-post/${params['group-id']}`}
@@ -89,6 +113,10 @@ const PostGroup = ({ params }: PostGroupProps) => {
             </tbody>
           </table>
         </div>
+        <Documentation
+          sampleRequest={sampleRequest}
+          sampleResponse={sampleResponse}
+        />
       </div>
     </div>
   )

@@ -13,6 +13,7 @@ export async function GET(request: Request) {
   for (const group of groups) {
     const groupObj = JSON.parse(group.data.S)
     groupParsed.push({
+      groupId: group.PK.S,
       groupName: groupObj.groupName,
       createdOn: groupObj.createdOn,
     })

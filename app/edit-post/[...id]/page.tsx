@@ -4,8 +4,9 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 
+import Documentation from '@/app/components/Documentation'
 import PostTableView from '@/app/components/PostTableView'
-import decodeUrlString from '@/app/lib/decodeUrl'
+import decodeUrlString from '@/app/lib/decodeUrlString'
 import editPost from '@/app/lib/editPost'
 import getPost from '@/app/lib/getPost'
 
@@ -26,6 +27,8 @@ const EditPost = ({ params }: CreatePostProps) => {
   const postId = decodeUrlString(params['id'][1])
   const [ready, setReady] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [sampleRequest, setSampleRequest] = useState('')
+  const [sampleResponse, setSampleResponse] = useState('')
   const callbackUrl = `/post-group/${groupId}`
 
   const {
@@ -51,15 +54,36 @@ const EditPost = ({ params }: CreatePostProps) => {
     editPost(groupId, postId, formData, router, callbackUrl, session, true)
   }
 
-  const fetchPost = async () => {
+  const prepareDoc = async () => {
+    const paramsObj = {
+      'group-id': groupId,
+      'post-id': postId,
+    }
+    const searchParams = new URLSearchParams(paramsObj)
+
+    const apiUrl = window.location.hostname + '/api/get-post?' + searchParams
+    const response = await fetch('/api/get-post?' + searchParams, {
+      method: 'GET',
+    })
+    setSampleRequest(
+      `const response = await fetch('${apiUrl}', {
+  method: 'GET'
+})
+const data = await response.json()`
+    )
+    setSampleResponse(JSON.stringify(await response.json(), null, '\t'))
+  }
+
+  const setup = async () => {
     const post = await getPost(groupId, postId, session)
     setValue('fields', post.fieldWithContent)
     setPost(post)
+    prepareDoc()
     setReady(true)
   }
 
   useEffect(() => {
-    fetchPost()
+    setup()
   }, [])
 
   const watchField = watch('fields')
@@ -67,7 +91,7 @@ const EditPost = ({ params }: CreatePostProps) => {
   return (
     <div className="d-flex justify-content-center mt-4">
       <div className="shadow p-3 mb-5 rounded">
-        <h3>Edit Post</h3>
+        <h3 className="text-center">Edit Post</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="mt-3">Post Content</label>
           <ul className="nav nav-tabs mt-3">
@@ -128,6 +152,10 @@ const EditPost = ({ params }: CreatePostProps) => {
             </div>
           </div>
         </form>
+        <Documentation
+          sampleRequest={sampleRequest}
+          sampleResponse={sampleResponse}
+        />
       </div>
     </div>
   )

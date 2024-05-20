@@ -2,8 +2,8 @@
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import SyntaxHighlighter from 'react-syntax-highlighter'
 
+import Documentation from '../components/Documentation'
 import getGroups from '../lib/getGroups'
 import { PostGroup } from '../types/field'
 
@@ -34,11 +34,12 @@ const DashboardPage = () => {
   const [sampleResponse, setSampleResponse] = useState('')
 
   const prepareDoc = async () => {
+    const apiUrl = window.location.hostname + '/api/get-groups'
     const response = await fetch('/api/get-groups', {
       method: 'GET',
     })
     setSampleRequest(
-      "const response = await fetch('/api/get-groups', {\n" +
+      `const response = await fetch('${apiUrl}', {\n` +
         "\tmethod: 'GET'\n" +
         '})\n' +
         'const data = await response.json()\n'
@@ -107,13 +108,10 @@ const DashboardPage = () => {
             </tbody>
           </table>
         </div>
-        <h3 className="text-center mt-5">Documentation</h3>
-        <div>Sample Request (Node.js)</div>
-        <SyntaxHighlighter language="javascript">
-          {sampleRequest}
-        </SyntaxHighlighter>
-        Sample Response (json)
-        <SyntaxHighlighter language="json">{sampleResponse}</SyntaxHighlighter>
+        <Documentation
+          sampleRequest={sampleRequest}
+          sampleResponse={sampleResponse}
+        />
       </div>
     </div>
   )

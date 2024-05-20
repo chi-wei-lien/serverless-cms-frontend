@@ -29,7 +29,7 @@ export default function RootLayout({
               <div>
                 <div className="p-4 rounded mt-4 underlined">
                   <h1>
-                    <u>Serverless Content Management System</u>
+                    <u>Serverless CMS</u>
                   </h1>
                 </div>
               </div>
