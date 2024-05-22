@@ -2,6 +2,7 @@
 import { FieldArrayWithId, UseFormRegister } from 'react-hook-form'
 
 import { PostFormValues } from '../types/field'
+import FormDataTypeSelector from './FormDataTypeSelector'
 
 interface FieldTableViewParam {
   fields: FieldArrayWithId<PostFormValues, 'fields', 'id'>[]
@@ -53,12 +54,11 @@ const PostTableView = ({ register, fields, ready }: FieldTableViewParam) => {
                 <div>{fields[index].dataType}</div>
               </td>
               <td>
-                <input
-                  className="form-control"
-                  {...register(`fields.${index}.content` as const, {
-                    required: true,
-                  })}
-                ></input>
+                <FormDataTypeSelector
+                  register={register}
+                  index={index}
+                  dataType={fields[index].dataType}
+                />
               </td>
             </tr>
           )

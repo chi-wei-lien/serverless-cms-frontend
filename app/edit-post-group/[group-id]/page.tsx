@@ -9,7 +9,7 @@ import getGroup from '@/app/lib/getGroup'
 
 import FieldJsonView from '../../components/FieldJsonView'
 import FieldTableView from '../../components/FieldTableView'
-import { FormValues, PostGroup } from '../../types/field'
+import { FormValues } from '../../types/field'
 
 interface EditPostGroupProps {
   params: { 'group-id': string }
@@ -41,7 +41,6 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
     control,
   })
 
-  const [group, setGroup] = useState<PostGroup>()
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
@@ -50,7 +49,6 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
 
   const fetchGroup = async () => {
     const group = await getGroup(params['group-id'])
-    setGroup(group)
     const fields = group.fields
     setValue('groupName', group.groupName)
     setValue('fields', fields)

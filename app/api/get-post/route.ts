@@ -1,4 +1,4 @@
-import { DynamodbResponse } from '@/app/types/field'
+import { DynamodbResponse, Post } from '@/app/types/field'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -24,7 +24,7 @@ export async function GET(request: Request) {
   const post = (await response.json())[0] as DynamodbResponse
 
   const postObj = JSON.parse(post.data.S)
-  const postParsed = {
+  const postParsed: Post = {
     postId: post.SK.S,
     createdOn: postObj.createdOn,
     data: JSON.parse(postObj['fields']),

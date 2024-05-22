@@ -1,5 +1,5 @@
 import decodeUrlString from '@/app/lib/decodeUrlString'
-import { DynamodbResponse, ExternalPostInGroup } from '@/app/types/field'
+import { DynamodbResponse, Post } from '@/app/types/field'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -15,10 +15,10 @@ export async function GET(request: Request) {
   })
   const posts = (await response.json()) as DynamodbResponse[]
 
-  const postParsed: ExternalPostInGroup[] = []
+  const postParsed: Post[] = []
   for (const post of posts) {
     const postData = JSON.parse(post.data.S)
-    const postObj: ExternalPostInGroup = {
+    const postObj: Post = {
       postId: post.SK.S,
       createdOn: postData.createdOn,
       data: JSON.parse(postData.fields),

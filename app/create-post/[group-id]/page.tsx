@@ -9,7 +9,7 @@ import editPost from '@/app/lib/editPost'
 import getGroup from '@/app/lib/getGroup'
 
 import FieldJsonView from '../../components/FieldJsonView'
-import { PostFormValues, PostGroup } from '../../types/field'
+import { PostFormValues } from '../../types/field'
 
 interface CreatePostProps {
   params: { 'group-id': string }
@@ -19,10 +19,13 @@ const CreatePost = ({ params }: CreatePostProps) => {
   const { data: session } = useSession()
 
   const [view, setView] = useState('tableView')
-  const [group, setGroup] = useState<PostGroup>()
   const [ready, setReady] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
+  const groupId = decodeURIComponent(
+    (params['group-id'] + '').replace(/\+/g, '%20')
+  )
+  const callbackUrl = `/post-group/${groupId}`
 
   const {
     register,
@@ -45,18 +48,13 @@ const CreatePost = ({ params }: CreatePostProps) => {
   const onSubmit = async (formData: PostFormValues) => {
     setSubmitting(true)
     const isoDateString = new Date().toISOString()
-    const groupId = decodeURIComponent(
-      (params['group-id'] + '').replace(/\+/g, '%20')
-    )
     const postId = `post-${isoDateString}`
-    const callbackUrl = `/post-group/${groupId}`
     await editPost(groupId, postId, formData, session, false)
     router.push(callbackUrl)
   }
 
   const fetchGroup = async () => {
     const group = await getGroup(params['group-id'])
-    setGroup(group)
     const fields = group.fields
     setValue('fields', fields)
     setReady(true)
@@ -116,7 +114,7 @@ const CreatePost = ({ params }: CreatePostProps) => {
             <div className="mt-4">
               <button
                 onClick={() => {
-                  router.push('/dashboard')
+                  router.push(callbackUrl)
                 }}
                 className="btn btn-light"
                 disabled={submitting}

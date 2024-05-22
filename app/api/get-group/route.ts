@@ -1,4 +1,4 @@
-import { DynamodbResponse, ExternalPostGroup } from '@/app/types/field'
+import { DynamodbResponse, Group } from '@/app/types/field'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -14,14 +14,14 @@ export async function GET(request: Request) {
     {
       method: 'GET',
       next: {
-        tags: ['groups'],
+        revalidate: 0,
       },
     }
   )
 
   const group = (await response.json())[0] as DynamodbResponse
   const groupObj = JSON.parse(group.data.S)
-  const groupParsed: ExternalPostGroup = {
+  const groupParsed: Group = {
     groupId: group.PK.S,
     groupName: groupObj.groupName,
     createdOn: groupObj.createdOn,

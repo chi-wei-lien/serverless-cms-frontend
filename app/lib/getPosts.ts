@@ -1,5 +1,5 @@
 'use server'
-import { ExternalPostInGroup } from '../types/field'
+import { Post } from '../types/field'
 
 const getPosts = async (groupId: string) => {
   const paramsObj = { 'group-id': groupId }
@@ -13,7 +13,7 @@ const getPosts = async (groupId: string) => {
     },
   })
 
-  const posts = (await response.json()) as ExternalPostInGroup[]
+  const posts = (await response.json()) as Post[]
 
   for (const post of posts) {
     post['editUrl'] = `/edit-post/${groupId}/${post.postId}`

@@ -129,7 +129,7 @@ const CreatePostGroup = () => {
                 type="submit"
                 className="btn btn-dark ms-2"
                 disabled={submitting}
-                value={submitting ? 'updating' : 'update'}
+                value={submitting ? 'creating' : 'create'}
               />
             </div>
           </div>

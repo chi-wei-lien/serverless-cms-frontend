@@ -73,6 +73,7 @@ const FieldTableView = ({
                   })}
                 >
                   <option>string</option>
+                  <option>long text</option>
                   <option>date</option>
                 </select>
               </td>

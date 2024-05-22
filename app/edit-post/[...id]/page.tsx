@@ -26,7 +26,6 @@ const EditPost = ({ params }: CreatePostProps) => {
   const { data: session } = useSession()
 
   const [view, setView] = useState('tableView')
-  const [post, setPost] = useState<Post>()
   const router = useRouter()
   const groupId = decodeUrlString(params['id'][0])
   const postId = decodeUrlString(params['id'][1])
@@ -78,8 +77,7 @@ const data = await response.json()`
 
   const setup = async () => {
     const post = await getPost(groupId, postId)
-    setValue('fields', post.fieldWithContent)
-    setPost(post)
+    setValue('fields', post.data)
     prepareDoc(post)
     setReady(true)
   }

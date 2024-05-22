@@ -30,16 +30,7 @@ export type DynamodbResponse = {
   }
 }
 
-export type PostGroup = {
-  groupName: string
-  createdOn: string
-  fields: string
-  groupId: string
-  editUrl: string
-  postUrl: string
-}
-
-export type ExternalPostGroup = {
+export type Group = {
   groupId: string
   groupName: string
   createdOn: string
@@ -48,20 +39,7 @@ export type ExternalPostGroup = {
   postUrl?: string
 }
 
-export type ExternalPost = {
-  groupId: string
-  postId: string
-  createdOn: string
-}
-
 export type Post = {
-  postId: string
-  createdOn: string
-  fieldWithContent: FieldWithContent[]
-  editUrl: string
-}
-
-export type ExternalPostInGroup = {
   postId: string
   createdOn: string
   data: FieldWithContent[]
