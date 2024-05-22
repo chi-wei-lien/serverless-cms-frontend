@@ -1,4 +1,5 @@
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
+'use server'
+import { revalidateTag } from 'next/cache'
 import { Session } from 'next-auth'
 
 import { FormValues } from '../types/field'
@@ -6,7 +7,6 @@ import { FormValues } from '../types/field'
 const editGroup = async (
   groupId: string,
   formData: FormValues,
-  router: AppRouterInstance,
   session: Session | null,
   update: Boolean
 ) => {
@@ -37,7 +37,7 @@ const editGroup = async (
     },
   })
   const responseData = await response.json()
-  router.push('/dashboard')
+  revalidateTag('groups')
 }
 
 export default editGroup

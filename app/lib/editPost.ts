@@ -1,4 +1,5 @@
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
+'use server'
+import { revalidateTag } from 'next/cache'
 import { Session } from 'next-auth'
 
 import { PostFormValues } from '../types/field'
@@ -7,8 +8,6 @@ const editPost = async (
   groupId: string,
   postId: string,
   formData: PostFormValues,
-  router: AppRouterInstance,
-  callbackUrl: string,
   session: Session | null,
   update: Boolean
 ) => {
@@ -40,7 +39,7 @@ const editPost = async (
     },
   })
   const responseData = await response.json()
-  router.push(callbackUrl)
+  revalidateTag('posts')
 }
 
 export default editPost

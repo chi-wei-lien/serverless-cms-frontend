@@ -1,11 +1,6 @@
-'use client'
-import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
-
 import Documentation from '@/app/components/Documentation'
 import decodeUrlString from '@/app/lib/decodeUrlString'
 import getPosts from '@/app/lib/getPosts'
-import { Post } from '@/app/types/field'
 
 const NoPostMessage = (
   <tr>
@@ -16,56 +11,26 @@ const NoPostMessage = (
   </tr>
 )
 
-const LoadingMessage = (
-  <tr>
-    <td colSpan={4}>
-      <div className="w-1 d-flex justify-content-center">
-        <div className="spinner-border" role="status" />
-      </div>
-    </td>
-  </tr>
-)
-
 interface PostGroupProps {
   params: { 'group-id': string }
 }
 
-const PostGroup = ({ params }: PostGroupProps) => {
-  const { data: session } = useSession()
-  const [posts, setPosts] = useState<Post[]>([])
-  const [ready, setReady] = useState(false)
-  const [sampleRequest, setSampleRequest] = useState('')
-  const [sampleResponse, setSampleResponse] = useState('')
+const replacer = (key: string, value: string) => {
+  if (key == 'editUrl') return undefined
+  else return value
+}
+
+const PostGroup = async ({ params }: PostGroupProps) => {
   const groupId = decodeUrlString(params['group-id'])
-  console.log(groupId)
-
-  const prepareDoc = async () => {
-    const paramsObj = { 'group-id': groupId }
-    const searchParams = new URLSearchParams(paramsObj)
-
-    const apiUrl = window.location.hostname + '/api/get-posts?' + searchParams
-    const response = await fetch('/api/get-posts?' + searchParams, {
-      method: 'GET',
-    })
-    setSampleRequest(
-      `const response = await fetch('${apiUrl}', {
+  const paramsObj = { 'group-id': groupId }
+  const searchParams = new URLSearchParams(paramsObj)
+  const apiUrl = 'http://localhost:3000/api/get-posts?' + searchParams
+  const sampleRequest = `const response = await fetch('${apiUrl}', {
   method: 'GET'
 })
 const data = await response.json()`
-    )
-    setSampleResponse(JSON.stringify(await response.json(), null, '\t'))
-  }
-
-  const setup = async () => {
-    const posts = await getPosts(params['group-id'], session)
-    setPosts(posts)
-    prepareDoc()
-    setReady(true)
-  }
-
-  useEffect(() => {
-    setup()
-  }, [])
+  const posts = await getPosts(groupId)
+  const sampleResponse = JSON.stringify(posts, replacer, '\t')
 
   return (
     <div className="d-flex justify-content-center mt-4">
@@ -90,8 +55,7 @@ const data = await response.json()`
               </tr>
             </thead>
             <tbody>
-              {!ready && LoadingMessage}
-              {ready && posts.length == 0 && NoPostMessage}
+              {posts.length == 0 && NoPostMessage}
               {posts.map((post, index) => {
                 return (
                   <tr key={index + 1}>

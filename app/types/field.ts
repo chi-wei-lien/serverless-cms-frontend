@@ -18,7 +18,7 @@ export type PostFormValues = {
   fields: FieldWithContent[]
 }
 
-export type PostGroupResponse = {
+export type DynamodbResponse = {
   PK: {
     S: string
   }
@@ -43,6 +43,9 @@ export type ExternalPostGroup = {
   groupId: string
   groupName: string
   createdOn: string
+  fields: string
+  editUrl?: string
+  postUrl?: string
 }
 
 export type ExternalPost = {
@@ -62,4 +65,5 @@ export type ExternalPostInGroup = {
   postId: string
   createdOn: string
   data: FieldWithContent[]
+  editUrl?: string
 }

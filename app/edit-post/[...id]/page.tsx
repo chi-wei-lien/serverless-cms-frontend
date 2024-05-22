@@ -17,6 +17,11 @@ interface CreatePostProps {
   params: { id: string[] }
 }
 
+const replacer = (key: string, value: string) => {
+  if (key == 'editUrl') return undefined
+  else return value
+}
+
 const EditPost = ({ params }: CreatePostProps) => {
   const { data: session } = useSession()
 
@@ -51,34 +56,31 @@ const EditPost = ({ params }: CreatePostProps) => {
 
   const onSubmit = async (formData: PostFormValues) => {
     setSubmitting(true)
-    editPost(groupId, postId, formData, router, callbackUrl, session, true)
+    await editPost(groupId, postId, formData, session, true)
+    router.push(callbackUrl)
   }
 
-  const prepareDoc = async () => {
+  const prepareDoc = async (post: Post) => {
     const paramsObj = {
       'group-id': groupId,
       'post-id': postId,
     }
     const searchParams = new URLSearchParams(paramsObj)
-
     const apiUrl = window.location.hostname + '/api/get-post?' + searchParams
-    const response = await fetch('/api/get-post?' + searchParams, {
-      method: 'GET',
-    })
     setSampleRequest(
       `const response = await fetch('${apiUrl}', {
   method: 'GET'
 })
 const data = await response.json()`
     )
-    setSampleResponse(JSON.stringify(await response.json(), null, '\t'))
+    setSampleResponse(JSON.stringify(post, replacer, '\t'))
   }
 
   const setup = async () => {
-    const post = await getPost(groupId, postId, session)
+    const post = await getPost(groupId, postId)
     setValue('fields', post.fieldWithContent)
     setPost(post)
-    prepareDoc()
+    prepareDoc(post)
     setReady(true)
   }
 

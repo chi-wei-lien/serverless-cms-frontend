@@ -1,25 +1,19 @@
-import { Session } from 'next-auth'
+'use server'
+import { ExternalPostGroup } from '../types/field'
 
-import { PostGroup, PostGroupResponse } from '../types/field'
-
-const getGroups = async (session: Session | null) => {
-  const response = await fetch('http://127.0.0.1:8080/get-groups', {
+const getGroups = async () => {
+  const response = await fetch('http://localhost:3000/api/get-groups', {
     method: 'GET',
-    headers: {
-      Authorization: `Bearer ${session?.idToken}`,
+    next: {
+      tags: ['groups'],
     },
   })
-  const groups = (await response.json()) as PostGroupResponse[]
-  const groupParsed: PostGroup[] = []
+  const groups = (await response.json()) as ExternalPostGroup[]
   for (const group of groups) {
-    const groupObj = JSON.parse(group.data.S)
-    groupObj['groupId'] = group.PK.S
-    groupObj['editUrl'] = `/edit-post-group/${groupObj.groupId}`
-    groupObj['postUrl'] = `/post-group/${groupObj.groupId}`
-    groupParsed.push(groupObj)
+    group.editUrl = `/edit-post-group/${group.groupId}`
+    group.postUrl = `/post-group/${group.groupId}`
   }
-
-  return groupParsed
+  return groups
 }
 
 export default getGroups

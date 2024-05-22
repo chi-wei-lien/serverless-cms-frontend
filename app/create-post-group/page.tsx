@@ -37,7 +37,8 @@ const CreatePostGroup = () => {
     setSubmitting(true)
     const isoDateString = new Date().toISOString()
     const groupId = `group-${isoDateString}`
-    editGroup(groupId, formData, router, session, false)
+    await editGroup(groupId, formData, session, false)
+    router.push('/dashboard')
   }
 
   const watchField = watch('fields')

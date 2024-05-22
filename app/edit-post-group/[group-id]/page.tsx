@@ -49,9 +49,9 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
   }, [])
 
   const fetchGroup = async () => {
-    const group = await getGroup(params['group-id'], session)
+    const group = await getGroup(params['group-id'])
     setGroup(group)
-    const fields = JSON.parse(group.fields)
+    const fields = group.fields
     setValue('groupName', group.groupName)
     setValue('fields', fields)
     setReady(true)
@@ -62,7 +62,8 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
     const groupId = decodeURIComponent(
       (params['group-id'] + '').replace(/\+/g, '%20')
     )
-    editGroup(groupId, formData, router, session, true)
+    await editGroup(groupId, formData, session, true)
+    router.push('/dashboard')
   }
 
   const watchField = watch('fields')

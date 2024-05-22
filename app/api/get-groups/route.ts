@@ -1,14 +1,14 @@
-import { ExternalPostGroup, PostGroupResponse } from '@/app/types/field'
+import { DynamodbResponse, ExternalPostGroup } from '@/app/types/field'
 
 export async function GET(request: Request) {
-  // const { searchParams } = new URL(request.url)
-  // const groupId = searchParams.get('groupId');
-
   const response = await fetch('http://127.0.0.1:8080/get-groups', {
     method: 'GET',
+    next: {
+      revalidate: 0,
+    },
   })
 
-  const groups = (await response.json()) as PostGroupResponse[]
+  const groups = (await response.json()) as DynamodbResponse[]
   const groupParsed: ExternalPostGroup[] = []
   for (const group of groups) {
     const groupObj = JSON.parse(group.data.S)
@@ -16,6 +16,7 @@ export async function GET(request: Request) {
       groupId: group.PK.S,
       groupName: groupObj.groupName,
       createdOn: groupObj.createdOn,
+      fields: JSON.parse(groupObj.fields),
     })
   }
 

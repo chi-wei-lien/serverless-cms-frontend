@@ -1,12 +1,7 @@
-import { Session } from 'next-auth'
-
+'use server'
 import { Post } from '../types/field'
 
-const getPost = async (
-  groupId: string,
-  postId: string,
-  session: Session | null
-) => {
+const getPost = async (groupId: string, postId: string) => {
   const paramsObj = {
     'group-id': groupId,
     'post-id': postId,
@@ -17,9 +12,8 @@ const getPost = async (
     'http://127.0.0.1:8080/get-post?' + searchParams,
     {
       method: 'GET',
-
-      headers: {
-        Authorization: `Bearer ${session?.idToken}`,
+      next: {
+        tags: ['posts'],
       },
     }
   )

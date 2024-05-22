@@ -1,4 +1,4 @@
-import { PostGroupResponse } from '@/app/types/field'
+import { DynamodbResponse } from '@/app/types/field'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -15,10 +15,13 @@ export async function GET(request: Request) {
     'http://127.0.0.1:8080/get-post?' + newSearchParams,
     {
       method: 'GET',
+      next: {
+        revalidate: 0,
+      },
     }
   )
 
-  const post = (await response.json())[0] as PostGroupResponse
+  const post = (await response.json())[0] as DynamodbResponse
 
   const postObj = JSON.parse(post.data.S)
   const postParsed = {

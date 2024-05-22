@@ -9,7 +9,7 @@ import editPost from '@/app/lib/editPost'
 import getGroup from '@/app/lib/getGroup'
 
 import FieldJsonView from '../../components/FieldJsonView'
-import { FieldWithContent, PostFormValues, PostGroup } from '../../types/field'
+import { PostFormValues, PostGroup } from '../../types/field'
 
 interface CreatePostProps {
   params: { 'group-id': string }
@@ -50,13 +50,14 @@ const CreatePost = ({ params }: CreatePostProps) => {
     )
     const postId = `post-${isoDateString}`
     const callbackUrl = `/post-group/${groupId}`
-    editPost(groupId, postId, formData, router, callbackUrl, session, false)
+    await editPost(groupId, postId, formData, session, false)
+    router.push(callbackUrl)
   }
 
   const fetchGroup = async () => {
-    const group = await getGroup(params['group-id'], session)
+    const group = await getGroup(params['group-id'])
     setGroup(group)
-    const fields = JSON.parse(group.fields) as FieldWithContent[]
+    const fields = group.fields
     setValue('fields', fields)
     setReady(true)
   }

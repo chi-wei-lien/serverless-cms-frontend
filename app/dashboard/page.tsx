@@ -1,11 +1,7 @@
-'use client'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
 
 import Documentation from '../components/Documentation'
 import getGroups from '../lib/getGroups'
-import { PostGroup } from '../types/field'
 
 const NoGroupMessage = (
   <tr>
@@ -16,47 +12,20 @@ const NoGroupMessage = (
   </tr>
 )
 
-const LoadingMessage = (
-  <tr>
-    <td colSpan={4}>
-      <div className="w-1 d-flex justify-content-center">
-        <div className="spinner-border" role="status" />
-      </div>
-    </td>
-  </tr>
-)
+const replacer = (key: string, value: string) => {
+  if (key == 'editUrl') return undefined
+  else if (key == 'postUrl') return undefined
+  else return value
+}
 
-const DashboardPage = () => {
-  const { data: session } = useSession()
-  const [groups, setGroups] = useState<PostGroup[]>([])
-  const [ready, setReady] = useState(false)
-  const [sampleRequest, setSampleRequest] = useState('')
-  const [sampleResponse, setSampleResponse] = useState('')
-
-  const prepareDoc = async () => {
-    const apiUrl = window.location.hostname + '/api/get-groups'
-    const response = await fetch('/api/get-groups', {
-      method: 'GET',
-    })
-    setSampleRequest(
-      `const response = await fetch('${apiUrl}', {\n` +
-        "\tmethod: 'GET'\n" +
-        '})\n' +
-        'const data = await response.json()\n'
-    )
-    setSampleResponse(JSON.stringify(await response.json(), null, '\t'))
-  }
-
-  const setup = async () => {
-    const groups = await getGroups(session)
-    setGroups(groups)
-    prepareDoc()
-    setReady(true)
-  }
-
-  useEffect(() => {
-    setup()
-  }, [])
+const DashboardPage = async () => {
+  const sampleRequest =
+    `const response = await fetch('http://localhost:3000/api/get-groups', {\n` +
+    "\tmethod: 'GET'\n" +
+    '})\n' +
+    'const data = await response.json()\n'
+  const groups = await getGroups()
+  const sampleResponse = JSON.stringify(groups, replacer, '\t')
 
   return (
     <div className="d-flex justify-content-center mt-4">
@@ -78,8 +47,7 @@ const DashboardPage = () => {
               </tr>
             </thead>
             <tbody>
-              {!ready && LoadingMessage}
-              {ready && groups.length == 0 && NoGroupMessage}
+              {groups.length == 0 && NoGroupMessage}
               {groups.map((group, index) => {
                 return (
                   <tr key={index + 1}>
