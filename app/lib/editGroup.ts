@@ -2,11 +2,11 @@
 import { revalidateTag } from 'next/cache'
 import { Session } from 'next-auth'
 
-import { FormValues } from '../types/field'
+import { GroupFormValues } from '../types/field'
 
 const editGroup = async (
   groupId: string,
-  formData: FormValues,
+  formData: GroupFormValues,
   session: Session | null,
   update: Boolean
 ) => {

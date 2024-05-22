@@ -1,23 +1,16 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 
-import editGroup from '@/app/lib/editGroup'
-import getGroup from '@/app/lib/getGroup'
+import FieldJsonView from '../components/FieldJsonView'
+import FieldTableView from '../components/FieldTableView'
+import editGroup from '../lib/editGroup'
+import { GroupFormValues } from '../types/field'
 
-import FieldJsonView from '../../components/FieldJsonView'
-import FieldTableView from '../../components/FieldTableView'
-import { FormValues } from '../../types/field'
-
-interface EditPostGroupProps {
-  params: { 'group-id': string }
-}
-
-const EditPostGroup = ({ params }: EditPostGroupProps) => {
+const CreatePostGroup = () => {
   const { data: session } = useSession()
-
   const [view, setView] = useState('tableView')
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
@@ -27,9 +20,8 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
     control,
     handleSubmit,
     watch,
-    setValue,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<GroupFormValues>({
     defaultValues: {
       groupName: '',
       fields: [],
@@ -41,26 +33,11 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
     control,
   })
 
-  const [ready, setReady] = useState(false)
-
-  useEffect(() => {
-    fetchGroup()
-  }, [])
-
-  const fetchGroup = async () => {
-    const group = await getGroup(params['group-id'])
-    const fields = group.fields
-    setValue('groupName', group.groupName)
-    setValue('fields', fields)
-    setReady(true)
-  }
-
-  const onSubmit = async (formData: FormValues) => {
+  const onSubmit = async (formData: GroupFormValues) => {
     setSubmitting(true)
-    const groupId = decodeURIComponent(
-      (params['group-id'] + '').replace(/\+/g, '%20')
-    )
-    await editGroup(groupId, formData, session, true)
+    const isoDateString = new Date().toISOString()
+    const groupId = `group-${isoDateString}`
+    await editGroup(groupId, formData, session, false)
     router.push('/dashboard')
   }
 
@@ -76,7 +53,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
   return (
     <div className="d-flex justify-content-center mt-4">
       <div className="shadow p-3 mb-5 rounded">
-        <h3>Edit Post Group</h3>
+        <h3>Create Post Group</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="mt-2">Post Group Name</label>
           <input
@@ -92,7 +69,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
               <button
                 className={
                   'nav-link ' +
-                  (view == 'jsonView' ? 'active text-secondary' : 'text-black')
+                  (view == 'jsonView' ? 'text-secondary' : 'active text-dark')
                 }
                 onClick={(e) => {
                   e.preventDefault()
@@ -106,7 +83,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
               <button
                 className={
                   'nav-link ' +
-                  (view == 'jsonView' ? 'active text-black' : 'text-secondary')
+                  (view == 'jsonView' ? 'active text-dark' : 'text-secondary')
                 }
                 onClick={(e) => {
                   e.preventDefault()
@@ -131,7 +108,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
           <div className="" style={{ width: '800px' }}>
             {view == 'tableView' && (
               <FieldTableView
-                ready={ready}
+                ready={true}
                 fields={fields}
                 register={register}
                 remove={remove}
@@ -152,7 +129,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
                 type="submit"
                 className="btn btn-dark ms-2"
                 disabled={submitting}
-                value={submitting ? 'updating' : 'update'}
+                value={submitting ? 'creating' : 'create'}
               />
             </div>
           </div>
@@ -162,4 +139,4 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
   )
 }
 
-export default EditPostGroup
+export default CreatePostGroup

@@ -9,7 +9,7 @@ export interface FieldWithContent {
   content: string
 }
 
-export type FormValues = {
+export type GroupFormValues = {
   groupName: string
   fields: Field[]
 }

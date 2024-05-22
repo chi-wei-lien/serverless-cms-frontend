@@ -1,5 +1,5 @@
 'use server'
-import { Post } from '../types/field'
+import { DynamodbResponse, Post } from '../types/field'
 
 const getPost = async (groupId: string, postId: string) => {
   const paramsObj = {
@@ -17,12 +17,12 @@ const getPost = async (groupId: string, postId: string) => {
       },
     }
   )
-  const group = (await response.json())[0]
-  const groupParsed = JSON.parse(group.data.S)
-  groupParsed['groupId'] = group.PK.S
-  groupParsed['fieldWithContent'] = JSON.parse(groupParsed['fields'])
+  const post = (await response.json())[0] as DynamodbResponse
+  const postParsed = JSON.parse(post.data.S)
+  postParsed['groupId'] = post.PK.S
+  postParsed['data'] = JSON.parse(postParsed['fields'])
 
-  return groupParsed as Post
+  return postParsed as Post
 }
 
 export default getPost

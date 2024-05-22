@@ -1,16 +1,23 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 
-import FieldJsonView from '../components/FieldJsonView'
-import FieldTableView from '../components/FieldTableView'
-import editGroup from '../lib/editGroup'
-import { FormValues } from '../types/field'
+import editGroup from '@/app/lib/editGroup'
+import getGroup from '@/app/lib/getGroup'
 
-const CreatePostGroup = () => {
+import FieldJsonView from '../../components/FieldJsonView'
+import FieldTableView from '../../components/FieldTableView'
+import { GroupFormValues } from '../../types/field'
+
+interface EditPostGroupProps {
+  params: { 'group-id': string }
+}
+
+const EditPostGroup = ({ params }: EditPostGroupProps) => {
   const { data: session } = useSession()
+
   const [view, setView] = useState('tableView')
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
@@ -20,8 +27,9 @@ const CreatePostGroup = () => {
     control,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<GroupFormValues>({
     defaultValues: {
       groupName: '',
       fields: [],
@@ -33,11 +41,26 @@ const CreatePostGroup = () => {
     control,
   })
 
-  const onSubmit = async (formData: FormValues) => {
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    fetchGroup()
+  }, [])
+
+  const fetchGroup = async () => {
+    const group = await getGroup(params['group-id'])
+    const fields = group.fields
+    setValue('groupName', group.groupName)
+    setValue('fields', fields)
+    setReady(true)
+  }
+
+  const onSubmit = async (formData: GroupFormValues) => {
     setSubmitting(true)
-    const isoDateString = new Date().toISOString()
-    const groupId = `group-${isoDateString}`
-    await editGroup(groupId, formData, session, false)
+    const groupId = decodeURIComponent(
+      (params['group-id'] + '').replace(/\+/g, '%20')
+    )
+    await editGroup(groupId, formData, session, true)
     router.push('/dashboard')
   }
 
@@ -53,7 +76,7 @@ const CreatePostGroup = () => {
   return (
     <div className="d-flex justify-content-center mt-4">
       <div className="shadow p-3 mb-5 rounded">
-        <h3>Create Post Group</h3>
+        <h3>Edit Post Group</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="mt-2">Post Group Name</label>
           <input
@@ -69,7 +92,7 @@ const CreatePostGroup = () => {
               <button
                 className={
                   'nav-link ' +
-                  (view == 'jsonView' ? 'text-secondary' : 'active text-dark')
+                  (view == 'jsonView' ? 'active text-secondary' : 'text-black')
                 }
                 onClick={(e) => {
                   e.preventDefault()
@@ -83,7 +106,7 @@ const CreatePostGroup = () => {
               <button
                 className={
                   'nav-link ' +
-                  (view == 'jsonView' ? 'active text-dark' : 'text-secondary')
+                  (view == 'jsonView' ? 'active text-black' : 'text-secondary')
                 }
                 onClick={(e) => {
                   e.preventDefault()
@@ -108,7 +131,7 @@ const CreatePostGroup = () => {
           <div className="" style={{ width: '800px' }}>
             {view == 'tableView' && (
               <FieldTableView
-                ready={true}
+                ready={ready}
                 fields={fields}
                 register={register}
                 remove={remove}
@@ -129,7 +152,7 @@ const CreatePostGroup = () => {
                 type="submit"
                 className="btn btn-dark ms-2"
                 disabled={submitting}
-                value={submitting ? 'creating' : 'create'}
+                value={submitting ? 'updating' : 'update'}
               />
             </div>
           </div>
@@ -139,4 +162,4 @@ const CreatePostGroup = () => {
   )
 }
 
-export default CreatePostGroup
+export default EditPostGroup

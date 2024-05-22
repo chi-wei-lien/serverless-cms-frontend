@@ -32,7 +32,7 @@ const DashboardPage = async () => {
       <div className="shadow p-3 mb-5 rounded">
         <h3 className="text-center">Post Groups</h3>
         <div className="d-flex justify-content-end">
-          <Link href="/create-post-group" className="btn btn-dark mt-2">
+          <Link href="/create-group" className="btn btn-dark mt-2">
             Create Post Group
           </Link>
         </div>

@@ -5,11 +5,11 @@ import {
   UseFormRegister,
 } from 'react-hook-form'
 
-import { FormValues } from '../types/field'
+import { GroupFormValues } from '../types/field'
 
 interface FieldTableViewParam {
-  register: UseFormRegister<FormValues>
-  fields: FieldArrayWithId<FormValues, 'fields', 'id'>[]
+  register: UseFormRegister<GroupFormValues>
+  fields: FieldArrayWithId<GroupFormValues, 'fields', 'id'>[]
   remove: UseFieldArrayRemove
   ready: Boolean
 }

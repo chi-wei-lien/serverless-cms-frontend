@@ -10,8 +10,8 @@ const getGroups = async () => {
   })
   const groups = (await response.json()) as Group[]
   for (const group of groups) {
-    group.editUrl = `/edit-post-group/${group.groupId}`
-    group.postUrl = `/post-group/${group.groupId}`
+    group.editUrl = `/edit-group/${group.groupId}`
+    group.postUrl = `/group/${group.groupId}`
   }
   return groups
 }

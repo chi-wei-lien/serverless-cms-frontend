@@ -25,7 +25,7 @@ const CreatePost = ({ params }: CreatePostProps) => {
   const groupId = decodeURIComponent(
     (params['group-id'] + '').replace(/\+/g, '%20')
   )
-  const callbackUrl = `/post-group/${groupId}`
+  const callbackUrl = `/group/${groupId}`
 
   const {
     register,

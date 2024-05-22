@@ -33,7 +33,7 @@ const EditPost = ({ params }: CreatePostProps) => {
   const [submitting, setSubmitting] = useState(false)
   const [sampleRequest, setSampleRequest] = useState('')
   const [sampleResponse, setSampleResponse] = useState('')
-  const callbackUrl = `/post-group/${groupId}`
+  const callbackUrl = `/group/${groupId}`
 
   const {
     register,
@@ -77,6 +77,7 @@ const data = await response.json()`
 
   const setup = async () => {
     const post = await getPost(groupId, postId)
+    console.log(post)
     setValue('fields', post.data)
     prepareDoc(post)
     setReady(true)
