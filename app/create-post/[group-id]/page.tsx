@@ -108,6 +108,7 @@ const CreatePost = ({ params }: CreatePostProps) => {
                 ready={ready}
                 fields={fields}
                 register={register}
+                control={control}
               />
             )}
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}

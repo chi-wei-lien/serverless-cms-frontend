@@ -27,13 +27,14 @@ const editGroup = async (
 
   const url = update
     ? 'http://127.0.0.1:8080/update-group'
-    : 'http://127.0.0.1:8080/add-group-to-post-list'
+    : 'http://127.0.0.1:8080/add-group'
 
   const response = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
       Authorization: `Bearer ${session?.idToken}`,
+      'Content-Type': 'application/json',
     },
   })
   const responseData = await response.json()

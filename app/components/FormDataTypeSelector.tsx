@@ -1,15 +1,17 @@
-import { UseFormRegister } from 'react-hook-form'
+import { Control, UseFormRegister } from 'react-hook-form'
 
 import { PostFormValues } from '../types/field'
 
 interface FormDataTypeSelectorProps {
   register: UseFormRegister<PostFormValues>
   index: number
+  control: Control<PostFormValues, any>
   dataType: string
 }
 
 const FormDataTypeSelector = ({
   register,
+  control,
   dataType,
   index,
 }: FormDataTypeSelectorProps) => {

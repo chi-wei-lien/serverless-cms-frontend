@@ -14,8 +14,19 @@ export type GroupFormValues = {
   fields: Field[]
 }
 
+export type Document = {
+  key: string
+  link: string
+  type: string
+  data?: File | null
+}
+
 export type PostFormValues = {
   fields: FieldWithContent[]
+}
+
+export type DocumentFormValues = {
+  documents: Document[]
 }
 
 export type DynamodbResponse = {

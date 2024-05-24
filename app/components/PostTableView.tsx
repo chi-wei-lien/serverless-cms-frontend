@@ -1,5 +1,5 @@
 'use client'
-import { FieldArrayWithId, UseFormRegister } from 'react-hook-form'
+import { Control, FieldArrayWithId, UseFormRegister } from 'react-hook-form'
 
 import { PostFormValues } from '../types/field'
 import FormDataTypeSelector from './FormDataTypeSelector'
@@ -7,6 +7,7 @@ import FormDataTypeSelector from './FormDataTypeSelector'
 interface FieldTableViewParam {
   fields: FieldArrayWithId<PostFormValues, 'fields', 'id'>[]
   register: UseFormRegister<PostFormValues>
+  control: Control<PostFormValues, any>
   ready: Boolean
 }
 
@@ -29,7 +30,12 @@ const NoFieldMessage = (
   </tr>
 )
 
-const PostTableView = ({ register, fields, ready }: FieldTableViewParam) => {
+const PostTableView = ({
+  register,
+  fields,
+  control,
+  ready,
+}: FieldTableViewParam) => {
   return (
     <table className="table">
       <thead className="table-dark">
@@ -56,6 +62,7 @@ const PostTableView = ({ register, fields, ready }: FieldTableViewParam) => {
               <td>
                 <FormDataTypeSelector
                   register={register}
+                  control={control}
                   index={index}
                   dataType={fields[index].dataType}
                 />
