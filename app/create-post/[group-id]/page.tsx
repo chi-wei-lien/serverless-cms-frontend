@@ -114,7 +114,8 @@ const CreatePost = ({ params }: CreatePostProps) => {
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">
               <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault()
                   router.push(callbackUrl)
                 }}
                 className="btn btn-light"

@@ -4,6 +4,8 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 
+import decodeUrlString from '@/app/lib/decodeUrlString'
+import deleteGroup from '@/app/lib/deleteGroup'
 import editGroup from '@/app/lib/editGroup'
 import getGroup from '@/app/lib/getGroup'
 
@@ -21,6 +23,7 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
   const [view, setView] = useState('tableView')
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
+  const groupId = decodeUrlString(params['group-id'])
 
   const {
     register,
@@ -57,9 +60,6 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
 
   const onSubmit = async (formData: GroupFormValues) => {
     setSubmitting(true)
-    const groupId = decodeURIComponent(
-      (params['group-id'] + '').replace(/\+/g, '%20')
-    )
     await editGroup(groupId, formData, session, true)
     router.push('/dashboard')
   }
@@ -77,6 +77,19 @@ const EditPostGroup = ({ params }: EditPostGroupProps) => {
     <div className="d-flex justify-content-center mt-4">
       <div className="shadow p-3 mb-5 rounded">
         <h3>Edit Post Group</h3>
+        <div className="d-flex justify-content-end">
+          <button
+            className="btn btn-dark mt-2"
+            onClick={async (e) => {
+              e.preventDefault()
+              await deleteGroup(groupId, session)
+              router.push('/dashboard')
+            }}
+            disabled={submitting}
+          >
+            Delete Group
+          </button>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="mt-2">Post Group Name</label>
           <input

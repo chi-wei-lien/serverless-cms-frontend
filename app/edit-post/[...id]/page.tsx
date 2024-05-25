@@ -7,6 +7,7 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import Documentation from '@/app/components/Documentation'
 import PostTableView from '@/app/components/PostTableView'
 import decodeUrlString from '@/app/lib/decodeUrlString'
+import deletePost from '@/app/lib/deletePost'
 import editPost from '@/app/lib/editPost'
 import getPost from '@/app/lib/getPost'
 
@@ -77,7 +78,6 @@ const data = await response.json()`
 
   const setup = async () => {
     const post = await getPost(groupId, postId)
-    console.log(post)
     setValue('fields', post.data)
     prepareDoc(post)
     setReady(true)
@@ -124,10 +124,24 @@ const data = await response.json()`
                 JSON View
               </button>
             </li>
+            <li className="nav-item ms-auto">
+              <button
+                className="btn btn-dark mt-2"
+                onClick={async (e) => {
+                  e.preventDefault()
+                  await deletePost(groupId, postId, session)
+                  router.push(callbackUrl)
+                }}
+                disabled={submitting}
+              >
+                Delete Post
+              </button>
+            </li>
           </ul>
           <div className="" style={{ width: '800px' }}>
             {view == 'tableView' && (
               <PostTableView
+                control={control}
                 ready={ready}
                 fields={fields}
                 register={register}
@@ -136,7 +150,8 @@ const data = await response.json()`
             {view == 'jsonView' && <FieldJsonView fields={watchField} />}
             <div className="mt-4">
               <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault()
                   router.push(callbackUrl)
                 }}
                 className="btn btn-light"

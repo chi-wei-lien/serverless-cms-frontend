@@ -36,6 +36,7 @@ const editPost = async (
     body: JSON.stringify(data),
     headers: {
       Authorization: `Bearer ${session?.idToken}`,
+      'Content-Type': 'application/json',
     },
   })
   const responseData = await response.json()
