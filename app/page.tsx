@@ -17,10 +17,13 @@ export default function HomePage() {
             and scalability to provide a powerful yet easy-to-use CMS solution.
           </p>
           <h3>How to use?</h3>
-          <p>
-            Below is a simple demonstration of how to use Simple CMS, using my
-            personal blog website as an example.
-          </p>
+          <p>Below is a simple demonstration of how to use Simple CMS.</p>
+
+          <div style={{ width: '100%', height: '300px', position: 'relative' }}>
+            <video controls preload="none" width="320" height="240">
+              <source src="/videos/demo.mp4" type="video/mp4" />
+            </video>
+          </div>
           <h3>Key Functionalities</h3>
           <ul>
             <li>
