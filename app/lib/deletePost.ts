@@ -13,7 +13,7 @@ const deletePost = async (
   }
   const searchParams = new URLSearchParams(paramsObj)
 
-  const url = `http://127.0.0.1:8080/delete-post?${searchParams}`
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/delete-post?${searchParams}`
 
   const response = await fetch(url, {
     method: 'GET',

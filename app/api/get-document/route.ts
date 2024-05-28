@@ -8,7 +8,8 @@ export async function GET(request: Request) {
   const newSearchParams = new URLSearchParams(paramsObj)
 
   const response = await fetch(
-    'http://127.0.0.1:8080/get-bucket-item?' + newSearchParams,
+    `${process.env.NEXT_PUBLIC_DOC_HOST_URL}/get-bucket-item?` +
+      newSearchParams,
     {
       method: 'GET',
       headers: {

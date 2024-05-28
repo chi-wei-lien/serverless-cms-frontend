@@ -21,11 +21,11 @@ const replacer = (key: string, value: string) => {
 }
 
 const PostGroupDashboard = async () => {
-  const sampleRequest =
-    `const response = await fetch('http://localhost:3000/api/get-groups', {\n` +
-    "\tmethod: 'GET'\n" +
-    '})\n' +
-    'const data = await response.json()\n'
+  const apiUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/get-groups?`
+  const sampleRequest = `const response = await fetch('${apiUrl}', {
+  method: 'GET'
+})
+const data = await response.json()`
   const groups = await getGroups()
   const sampleResponse = JSON.stringify(groups, replacer, '\t')
 

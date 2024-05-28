@@ -28,8 +28,8 @@ const editPost = async (
   }
 
   const url = update
-    ? 'http://127.0.0.1:8080/update-post'
-    : 'http://127.0.0.1:8080/add-post'
+    ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/update-post`
+    : `${process.env.NEXT_PUBLIC_BACKEND_URL}/add-post`
 
   const response = await fetch(url, {
     method: 'POST',

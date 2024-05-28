@@ -26,8 +26,8 @@ const editGroup = async (
   }
 
   const url = update
-    ? 'http://127.0.0.1:8080/update-group'
-    : 'http://127.0.0.1:8080/add-group'
+    ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/update-group`
+    : `${process.env.NEXT_PUBLIC_BACKEND_URL}/add-group`
 
   const response = await fetch(url, {
     method: 'POST',

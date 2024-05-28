@@ -24,7 +24,7 @@ const PostGroup = async ({ params }: PostGroupProps) => {
   const groupId = decodeUrlString(params['group-id'])
   const paramsObj = { 'group-id': groupId }
   const searchParams = new URLSearchParams(paramsObj)
-  const apiUrl = 'http://localhost:3000/api/get-posts?' + searchParams
+  const apiUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/get-posts?${searchParams}`
   const sampleRequest = `const response = await fetch('${apiUrl}', {
   method: 'GET'
 })

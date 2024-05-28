@@ -1,12 +1,15 @@
 import { DynamodbResponse, Group } from '@/app/types/field'
 
 export async function GET(request: Request) {
-  const response = await fetch('http://127.0.0.1:8080/get-groups', {
-    method: 'GET',
-    next: {
-      revalidate: 0,
-    },
-  })
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/get-groups`,
+    {
+      method: 'GET',
+      next: {
+        revalidate: 0,
+      },
+    }
+  )
 
   const groups = (await response.json()) as DynamodbResponse[]
   const groupParsed: Group[] = []

@@ -1,5 +1,5 @@
 'use server'
-import { DynamodbResponse, Post } from '../types/field'
+import { Post } from '../types/field'
 
 const getPost = async (groupId: string, postId: string) => {
   const paramsObj = {
@@ -9,7 +9,7 @@ const getPost = async (groupId: string, postId: string) => {
   const searchParams = new URLSearchParams(paramsObj)
 
   const response = await fetch(
-    'http://127.0.0.1:8080/get-post?' + searchParams,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/get-post?${searchParams}`,
     {
       method: 'GET',
       next: {
@@ -17,12 +17,8 @@ const getPost = async (groupId: string, postId: string) => {
       },
     }
   )
-  const post = (await response.json())[0] as DynamodbResponse
-  const postParsed = JSON.parse(post.data.S)
-  postParsed['groupId'] = post.PK.S
-  postParsed['data'] = JSON.parse(postParsed['fields'])
-
-  return postParsed as Post
+  const post = (await response.json()) as Post
+  return post
 }
 
 export default getPost

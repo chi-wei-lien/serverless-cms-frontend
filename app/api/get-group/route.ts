@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const newSearchParams = new URLSearchParams(paramsObj)
 
   const response = await fetch(
-    'http://127.0.0.1:8080/get-group?' + newSearchParams,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/get-group?` + newSearchParams,
     {
       method: 'GET',
       next: {

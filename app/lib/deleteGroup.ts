@@ -8,7 +8,7 @@ const deleteGroup = async (groupId: string, session: Session | null) => {
   }
   const searchParams = new URLSearchParams(paramsObj)
 
-  const url = `http://127.0.0.1:8080/delete-group?${searchParams}`
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/delete-group?${searchParams}`
 
   const response = await fetch(url, {
     method: 'GET',

@@ -7,7 +7,7 @@ const getPresignedUrl = async (key: string, session: Session | null) => {
   const searchParams = new URLSearchParams(paramsObj)
 
   const response = await fetch(
-    'http://127.0.0.1:8080/gen-presigned-url?' + searchParams,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/gen-presigned-url?${searchParams}`,
     {
       method: 'GET',
       next: {

@@ -4,7 +4,7 @@ const getGroup = async (groupId: string) => {
   const searchParams = new URLSearchParams(paramsObj)
 
   const response = await fetch(
-    'http://localhost:3000/api/get-group?' + searchParams,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/get-group?${searchParams}`,
     {
       method: 'GET',
       next: {

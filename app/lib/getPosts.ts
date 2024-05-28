@@ -4,7 +4,7 @@ import { Post } from '../types/field'
 const getPosts = async (groupId: string) => {
   const paramsObj = { 'group-id': groupId }
   const searchParams = new URLSearchParams(paramsObj)
-  const apiUrl = 'http://localhost:3000/api/get-posts?' + searchParams
+  const apiUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/get-posts?${searchParams}`
 
   const response = await fetch(apiUrl, {
     method: 'GET',

@@ -6,7 +6,8 @@ export async function GET(request: Request) {
   const groupId = decodeUrlString(searchParams.get('group-id') as string)
   const paramsObj = { 'group-id': groupId }
   const newSearchParams = new URLSearchParams(paramsObj)
-  const apiUrl = 'http://127.0.0.1:8080/get-posts?' + newSearchParams
+  const apiUrl =
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/get-posts?` + newSearchParams
   const response = await fetch(apiUrl, {
     method: 'GET',
     next: {

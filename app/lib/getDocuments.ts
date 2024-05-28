@@ -15,7 +15,7 @@ const getDocuments = async () => {
       key: document.key,
     }
     const searchParams = new URLSearchParams(paramsObj)
-    document.link = `http://localhost:3000/api/get-document?${searchParams}`
+    document.link = `${process.env.NEXT_PUBLIC_APP_URL}/api/get-document?${searchParams}`
   }
   return documents
 }
