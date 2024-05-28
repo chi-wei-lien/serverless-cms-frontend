@@ -2,12 +2,15 @@
 import { Document } from '../types/field'
 
 const getDocuments = async () => {
-  const response = await fetch('http://127.0.0.1:8080/list-bucket-items', {
-    method: 'GET',
-    next: {
-      tags: ['documents'],
-    },
-  })
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/list-bucket-items`,
+    {
+      method: 'GET',
+      next: {
+        tags: ['documents'],
+      },
+    }
+  )
 
   const documents = (await response.json()) as Document[]
   for (const document of documents) {
