@@ -13,7 +13,7 @@ interface SessionnCallbackParam {
   token: JWT
 }
 
-const authOptions = {
+export const authOptions = {
   providers: [
     CognitoProvider({
       clientId: process.env.COGNITO_CLIENT_ID as string,

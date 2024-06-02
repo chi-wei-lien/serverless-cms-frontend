@@ -23,7 +23,6 @@ const deletePost = async (
   })
 
   const responseData = await response.json()
-  console.log(responseData)
   revalidateTag('posts')
 }
 

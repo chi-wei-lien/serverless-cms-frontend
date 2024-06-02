@@ -1,18 +1,29 @@
 'use server'
+import { getServerSession } from 'next-auth/next'
+
+import { authOptions } from '../api/auth/[...nextauth]/route'
 import { Document } from '../types/field'
 
 const getDocuments = async () => {
+  const session = await getServerSession(authOptions)
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/list-bucket-items`,
     {
       method: 'GET',
       next: {
+        revalidate: 0,
         tags: ['documents'],
+      },
+      headers: {
+        Authorization: `Bearer ${session?.idToken}`,
+        'Content-Type': 'application/json',
       },
     }
   )
 
-  const documents = (await response.json()) as Document[]
+  const data = await response.json()
+  const documents = data as Document[]
   for (const document of documents) {
     const paramsObj = {
       key: document.key,
